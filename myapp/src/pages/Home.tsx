@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
     View, 
     Text, 
@@ -9,32 +9,51 @@ import {
 } from 'react-native';
 
 export  function Home(){
-  return(
-    <View style = {styles.container}>
+    const [newSkill, setNewSkill] = useState(''); 
+    const [mySkills, setMySkill] = useState([]);
 
-        <Text style={styles.title}>Welcome, Gedson!</Text>
+    function handleAddNewSkill(){
+        setMySkill(oldState => [...oldState, newSkill]);
+    }
 
-        <TextInput 
-            style={styles.input} 
-            placeholder= "New skill"
-            placeholderTextColor={"#555"}
-        />
+    return(
+        <View style = {styles.container}>
 
-        <TouchableOpacity 
-            style={styles.button}
-            activeOpacity={.7}
-        >
-            <Text style={styles.buttonText}>Add</Text>
+            <Text style={styles.title}>Welcome, Gedson!</Text>
 
-        </TouchableOpacity>
+            <TextInput 
+                style={styles.input} 
+                placeholder= "New skill"
+                placeholderTextColor={"#555"}
+                onChangeText={setNewSkill}
+            />
 
-        <Text style={[styles.title, { marginTop: 50 }]}>
+            <TouchableOpacity 
+                style={styles.button}
+                activeOpacity={.7}
+                onPress={handleAddNewSkill}
+            >
+                <Text style={styles.buttonText}>Add</Text>
 
-            My Skills
+            </TouchableOpacity>
 
-        </Text>
-      
-    </View>
+            <Text style={[styles.title, { marginVertical: 50 }]}>
+
+                My Skill
+
+            </Text>
+
+            {
+                mySkills.map(skill => (
+                    <TouchableOpacity key={skill} style={styles.buttonSkill}>
+                        <Text style={styles.textSkill}>
+                            {skill}
+                        </Text>
+                    </TouchableOpacity>
+                ))
+            }
+        
+        </View>
   )
 }
 
@@ -71,6 +90,20 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#FFF',
         fontSize: 17,
+        fontWeight: 'bold',
+    },
+
+    buttonSkill: {
+        backgroundColor: '#1F1E25',
+        padding: 15,
+        borderRadius: 20,
+        alignItems: 'center',
+        marginVertical: 10
+    },
+
+    textSkill: {
+        color: '#FFF',
+        fontSize: 22,
         fontWeight: 'bold',
     }
 
