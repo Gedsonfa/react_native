@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
     View, 
     Text, 
@@ -11,19 +11,52 @@ import {
 import { Button } from "../components/Button";
 import { SkillCard } from "../components/SkillCard";
 
+interface SkillData{
+    id: string;
+    name: String;
+}
+
 export  function Home(){
     const [newSkill, setNewSkill] = useState(''); 
-    const [mySkills, setMySkill] = useState([]);
+    const [mySkills, setMySkills] = useState<SkillData[]>([]);
+    const [gretting, setGretting] = useState('');
 
     function handleAddNewSkill(){
-        setMySkill(oldState => [...oldState, newSkill]);
+
+        const data = {
+            id: String(new Date().getTime()),
+            name: newSkill,
+        }
+
+        setMySkills(oldState => [...oldState, data]);
     }
+
+    useEffect(() => {
+        const currentHour = new Date().getHours();
+
+        if(currentHour < 12){
+            setGretting('Good morning');
+        }
+        else if(currentHour >= 12 && currentHour < 18){
+            setGretting('Good afternoon');
+        }
+        else{
+            setGretting('Good night');
+        }
+    }, [])
 
     return(
         <View style = {styles.container}>
 
             <Text style={styles.title}>Welcome, Gedson!</Text>
 
+            <Text style={[styles.greatting]}>
+
+                { gretting }
+
+            </Text>
+
+            
             <TextInput 
                 style={styles.input} 
                 placeholder= "New skill"
@@ -35,15 +68,16 @@ export  function Home(){
 
             <Text style={[styles.title, { marginVertical: 50 }]}>
 
-                My Skill
+                My Skills
 
             </Text>
 
+
             <FlatList
                 data={mySkills}
-                keyExtractor={item=>item}
+                keyExtractor={item=>item.id}
                 renderItem={({ item }) => (
-                    <SkillCard skill={item}/>
+                    <SkillCard skill={item.name}/>
                 )}
             />
 
@@ -73,6 +107,10 @@ const styles = StyleSheet.create({
         padding: Platform.OS === 'ios' ? 15 : 10,
         marginTop: 30,
         borderRadius: 7
+    },
+
+    greatting: {
+        color: '#FFF',
     },
 
 });
